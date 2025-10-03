@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import chatRoutes from './chat.routes';
+import userRoutes from './user.routes';
 
 const router = Router();
 
@@ -9,6 +10,9 @@ router.use('/auth', authRoutes);
 
 // Chat routes
 router.use('/chats', chatRoutes);
+
+// User routes
+router.use('/users', userRoutes);
 
 // Health check
 router.get('/health', (req, res) => {

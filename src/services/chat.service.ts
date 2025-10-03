@@ -1,6 +1,7 @@
 import Chat, { IChat } from '../models/Chat.model';
 import Message, { IMessage } from '../models/Message.model';
 import aiService from './ai.service';
+import { Types } from 'mongoose';
 
 export class ChatService {
   /**
@@ -94,8 +95,12 @@ export class ChatService {
       const previousMessages = await this.getChatMessages(chatId);
 
       // Prepare messages for AI (excluding the just-added user message to avoid duplication)
+      const userMessageId = (userMessage as any)._id as Types.ObjectId;
       const conversationHistory = previousMessages
-        .filter(msg => (msg as any)._id.toString() !== (userMessage as any)._id.toString())
+        .filter(msg => {
+          const msgId = (msg as any)._id as Types.ObjectId;
+          return msgId.toString() !== userMessageId.toString();
+        })
         .map((msg) => ({
           role: msg.role,
           content: msg.content,
