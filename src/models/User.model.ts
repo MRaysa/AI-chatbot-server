@@ -6,6 +6,7 @@ export interface IUser extends Document {
   displayName?: string;
   photoURL?: string;
   provider: 'email' | 'google';
+  stripeCustomerId?: string;
   createdAt: Date;
   updatedAt: Date;
   lastLoginAt?: Date;
@@ -36,6 +37,9 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ['email', 'google'],
       default: 'email',
+    },
+    stripeCustomerId: {
+      type: String,
     },
     lastLoginAt: {
       type: Date,
