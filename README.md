@@ -478,4 +478,10 @@ For backend-specific issues:
 
 *Part of the AI Chat Boot platform*
 
+### 👩‍💻 Built By
+
+**Aysa Siddika Meem**
+
+*Full Stack Developer*
+
 </div>
