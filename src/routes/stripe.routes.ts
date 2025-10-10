@@ -12,4 +12,7 @@ router.post('/create-checkout-session', authMiddleware, stripeController.createC
 router.get('/subscription', authMiddleware, stripeController.getSubscription);
 router.post('/cancel-subscription', authMiddleware, stripeController.cancelSubscription);
 
+// New endpoint to verify and sync subscription after checkout
+router.post('/verify-session', authMiddleware, stripeController.verifyCheckoutSession);
+
 export default router;

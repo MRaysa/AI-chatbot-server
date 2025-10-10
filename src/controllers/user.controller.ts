@@ -79,6 +79,8 @@ export class UserController {
           displayName: user.displayName,
           photoURL: user.photoURL,
           provider: user.provider,
+          subscriptionPlan: user.subscriptionPlan,
+          subscriptionStatus: user.subscriptionStatus,
           createdAt: user.createdAt,
           lastLoginAt: user.lastLoginAt,
         },

@@ -7,6 +7,8 @@ export interface IUser extends Document {
   photoURL?: string;
   provider: 'email' | 'google';
   stripeCustomerId?: string;
+  subscriptionPlan: 'free' | 'pro' | 'team';
+  subscriptionStatus?: 'active' | 'canceled' | 'past_due' | 'trialing';
   createdAt: Date;
   updatedAt: Date;
   lastLoginAt?: Date;
@@ -40,6 +42,15 @@ const userSchema = new Schema<IUser>(
     },
     stripeCustomerId: {
       type: String,
+    },
+    subscriptionPlan: {
+      type: String,
+      enum: ['free', 'pro', 'team'],
+      default: 'free',
+    },
+    subscriptionStatus: {
+      type: String,
+      enum: ['active', 'canceled', 'past_due', 'trialing'],
     },
     lastLoginAt: {
       type: Date,

@@ -66,8 +66,8 @@ export class StripeController {
           },
         ],
         mode: 'subscription',
-        success_url: `${process.env.ALLOWED_ORIGINS}/chat?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.ALLOWED_ORIGINS}/chat`,
+        success_url: `${process.env.ALLOWED_ORIGINS}/pricing?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.ALLOWED_ORIGINS}/pricing`,
         metadata: {
           userId: uid,
           plan,
@@ -168,6 +168,7 @@ export class StripeController {
         subscription: {
           plan: subscription.plan,
           status: subscription.status,
+          currentPeriodStart: subscription.currentPeriodStart,
           currentPeriodEnd: subscription.currentPeriodEnd,
           cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
         },
@@ -219,6 +220,77 @@ export class StripeController {
     }
   }
 
+  /**
+   * @desc    Verify checkout session and sync subscription
+   * @route   POST /api/stripe/verify-session
+   * @access  Private
+   */
+  async verifyCheckoutSession(req: Request, res: Response): Promise<Response> {
+    try {
+      const uid = (req as any).user?.uid;
+      const { sessionId } = req.body;
+
+      if (!uid) {
+        return ApiResponse.unauthorized(res, 'User not authenticated');
+      }
+
+      if (!sessionId) {
+        return ApiResponse.badRequest(res, 'Session ID is required');
+      }
+
+      // Retrieve checkout session from Stripe
+      const session: any = await stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.payment_status === 'paid' && session.subscription) {
+        // Retrieve subscription details
+        const subscription: any = await stripe.subscriptions.retrieve(session.subscription);
+
+        // Check if subscription already exists
+        let existingSubscription = await Subscription.findOne({
+          stripeSubscriptionId: subscription.id,
+        });
+
+        if (!existingSubscription) {
+          // Create subscription record
+          existingSubscription = await Subscription.create({
+            userId: uid,
+            stripeCustomerId: session.customer,
+            stripeSubscriptionId: subscription.id,
+            stripePriceId: subscription.items.data[0].price.id,
+            plan: session.metadata.plan,
+            status: subscription.status,
+            currentPeriodStart: new Date(subscription.current_period_start * 1000),
+            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            cancelAtPeriodEnd: subscription.cancel_at_period_end,
+          });
+        }
+
+        // Always update user's subscription plan (in case it changed)
+        await User.findOneAndUpdate(
+          { uid },
+          {
+            subscriptionPlan: session.metadata.plan,
+            subscriptionStatus: subscription.status,
+          }
+        );
+
+        return ApiResponse.success(res, 'Subscription verified and synced', {
+          subscription: {
+            plan: session.metadata.plan,
+            status: subscription.status,
+            currentPeriodStart: new Date(subscription.current_period_start * 1000),
+            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          },
+        });
+      }
+
+      return ApiResponse.badRequest(res, 'Payment not completed or no subscription found');
+    } catch (error: any) {
+      console.error('Verify checkout session error:', error);
+      return ApiResponse.error(res, error.message || 'Failed to verify checkout session');
+    }
+  }
+
   // Private helper methods
 
   private async handleCheckoutSessionCompleted(session: any) {
@@ -242,30 +314,62 @@ export class StripeController {
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     });
 
+    // Update user's subscription plan and status
+    await User.findOneAndUpdate(
+      { uid: userId },
+      {
+        subscriptionPlan: plan,
+        subscriptionStatus: subscription.status,
+      }
+    );
+
     console.log(`Subscription created for user ${userId} with plan ${plan}`);
   }
 
   private async handleSubscriptionUpdated(subscription: any) {
-    await Subscription.findOneAndUpdate(
+    const dbSubscription = await Subscription.findOneAndUpdate(
       { stripeSubscriptionId: subscription.id },
       {
         status: subscription.status,
         currentPeriodStart: new Date(subscription.current_period_start * 1000),
         currentPeriodEnd: new Date(subscription.current_period_end * 1000),
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      }
+      },
+      { new: true }
     );
+
+    // Update user's subscription status
+    if (dbSubscription) {
+      await User.findOneAndUpdate(
+        { uid: dbSubscription.userId },
+        {
+          subscriptionStatus: subscription.status,
+        }
+      );
+    }
 
     console.log(`Subscription ${subscription.id} updated`);
   }
 
   private async handleSubscriptionDeleted(subscription: any) {
-    await Subscription.findOneAndUpdate(
+    const dbSubscription = await Subscription.findOneAndUpdate(
       { stripeSubscriptionId: subscription.id },
       {
         status: 'canceled',
-      }
+      },
+      { new: true }
     );
+
+    // Update user's subscription to free plan
+    if (dbSubscription) {
+      await User.findOneAndUpdate(
+        { uid: dbSubscription.userId },
+        {
+          subscriptionPlan: 'free',
+          subscriptionStatus: 'canceled',
+        }
+      );
+    }
 
     console.log(`Subscription ${subscription.id} deleted`);
   }
@@ -274,12 +378,23 @@ export class StripeController {
     const subscriptionId = invoice.subscription;
 
     if (subscriptionId) {
-      await Subscription.findOneAndUpdate(
+      const dbSubscription = await Subscription.findOneAndUpdate(
         { stripeSubscriptionId: subscriptionId },
         {
           status: 'past_due',
-        }
+        },
+        { new: true }
       );
+
+      // Update user's subscription status
+      if (dbSubscription) {
+        await User.findOneAndUpdate(
+          { uid: dbSubscription.userId },
+          {
+            subscriptionStatus: 'past_due',
+          }
+        );
+      }
 
       console.log(`Payment failed for subscription ${subscriptionId}`);
     }
