@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 AI Chat Boot - Backend API
+# 🚀 ChatMind - Backend API
 
 ### *Express.js REST API with OpenAI GPT Integration*
 
@@ -12,7 +12,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Admin-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Stripe](https://img.shields.io/badge/Stripe-API-008CDD?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com/)
 
-**Location:** `D:\All website project\AI Chat boot\AI Chat boot-backend`
+**Location:** `D:\All website project\ChatMind\ChatMind-backend`
 
 </div>
 
@@ -20,7 +20,7 @@
 
 ## 📋 Overview
 
-This is the backend API server for AI Chat Boot, built with Express.js and TypeScript. It provides RESTful endpoints for authentication, chat management, AI conversations, and payment processing.
+This is the backend API server for ChatMind, built with Express.js and TypeScript. It provides RESTful endpoints for authentication, chat management, AI conversations, and payment processing.
 
 ## ✨ Features
 
@@ -65,7 +65,7 @@ This is the backend API server for AI Chat Boot, built with Express.js and TypeS
 ## 📁 Project Structure
 
 ```
-D:\All website project\AI Chat boot\AI Chat boot-backend\
+D:\All website project\ChatMind\ChatMind-backend\
 │
 ├── 📂 src/
 │   ├── 📂 controllers/              # Request handlers (MVC pattern)
@@ -132,7 +132,7 @@ D:\All website project\AI Chat boot\AI Chat boot-backend\
 
 ```bash
 # Navigate to backend directory
-cd "D:\All website project\AI Chat boot\AI Chat boot-backend"
+cd "D:\All website project\ChatMind\ChatMind-backend"
 
 # Install dependencies
 ppnpm install
@@ -476,7 +476,7 @@ For backend-specific issues:
 
 **Built with Node.js, Express & TypeScript** 💚
 
-*Part of the AI Chat Boot platform*
+*Part of the ChatMind platform*
 
 ### 👩‍💻 Built By
 
