@@ -135,7 +135,7 @@ D:\All website project\AI Chat boot\AI Chat boot-backend\
 cd "D:\All website project\AI Chat boot\AI Chat boot-backend"
 
 # Install dependencies
-npm install
+ppnpm install
 ```
 
 ### Environment Configuration
@@ -148,9 +148,9 @@ PORT=5000
 NODE_ENV=development
 
 # MongoDB Connection
-MONGODB_URI=mongodb://localhost:27017/ai-chat-boot
-# For MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/ai-chat-boot?retryWrites=true&w=majority
+MONGODB_URI=xxxxxxxxxxxxxxxxxxxx
+
+
 
 # OpenAI API
 OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -180,17 +180,17 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 
 #### Development Mode (with hot reload)
 ```bash
-npm run dev
+pnpm run dev
 ```
 ✅ Server starts at `http://localhost:5000`
 
 #### Production Mode
 ```bash
 # Build TypeScript
-npm run build
+pnpm run build
 
 # Start production server
-npm start
+pnpm start
 ```
 
 ## 🔌 API Endpoints
@@ -315,25 +315,25 @@ GET    /api/health                  # Server health status
 
 ```bash
 # Start development server with hot reload
-npm run dev
+pnpm run dev
 
 # Build TypeScript to JavaScript
-npm run build
+pnpm run build
 
 # Start production server
-npm start
+pnpm start
 
 # Run linter
-npm run lint
+pnpm run lint
 
 # Fix linting issues
-npm run lint:fix
+pnpm run lint:fix
 
 # Run tests (if configured)
-npm test
+pnpm test
 
 # Check TypeScript types
-npm run type-check
+pnpm run type-check
 ```
 
 ## 🔒 Security Features
@@ -409,8 +409,8 @@ railway up
 
 #### Render
 1. Connect GitHub repository
-2. Set build command: `npm run build`
-3. Set start command: `npm start`
+2. Set build command: `pnpm run build`
+3. Set start command: `pnpm start`
 4. Add environment variables
 
 #### Heroku
