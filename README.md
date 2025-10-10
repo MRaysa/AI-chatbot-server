@@ -150,8 +150,6 @@ NODE_ENV=development
 # MongoDB Connection
 MONGODB_URI=xxxxxxxxxxxxxxxxxxxx
 
-
-
 # OpenAI API
 OPENAI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 OPENAI_MODEL=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
