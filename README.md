@@ -153,10 +153,10 @@ MONGODB_URI=xxxxxxxxxxxxxxxxxxxx
 
 
 # OpenAI API
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-OPENAI_MODEL=gpt-4
-OPENAI_MAX_TOKENS=2000
-OPENAI_TEMPERATURE=0.7
+OPENAI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_MODEL=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_MAX_TOKENS=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_TEMPERATURE=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Firebase Admin SDK
 FIREBASE_PROJECT_ID=your-project-id
